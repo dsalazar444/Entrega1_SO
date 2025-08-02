@@ -24,6 +24,27 @@ struct Planificador {
     
     }
 
+    void agregarTodosDesdeTxt(const string& filepath) {
+        ifstream archivo(filepath);
+        if (!archivo.is_open()) {
+            cerr << "No se pudo abrir el archivo: " << filepath << endl;
+            return;
+        }
+    
+        string linea;
+        while (getline(archivo, linea)) {
+            Proceso nuevo = parseLineaTxt(linea);
+            procesos.push(nuevo);
+            cout << "Se cargó el proceso PID " << nuevo.pid << endl;
+        }
+    }
+
+    void agregarDesdeTxt(const string& filepath) {
+    Proceso nuevo(filepath);
+    procesos.push(nuevo);
+    nuevo.mostrar();
+    }
+
     void recorrerProcesos(queue<Proceso> procesos) {
         //cout << "Tipo " << typeid(procesos.front()).name() << endl;
 
