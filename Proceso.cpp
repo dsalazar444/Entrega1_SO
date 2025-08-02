@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <fstream>
 #include "imports/json.hpp"
 
 using namespace std;
@@ -48,34 +49,37 @@ struct Proceso {
 };
 
 Proceso parseLineaTxt(const string& linea) {
-        Proceso p;
-        stringstream ss(linea);
-        string campo;
-        
-        while (getline(ss, campo, ',')) {
-            campo.erase(0, campo.find_first_not_of(" \t"));
-            campo.erase(campo.find_last_not_of(" \t") + 1);
-        
-            size_t eq_pos = campo.find('=');
-            if (eq_pos == string::npos) continue;
-        
-            string clave = campo.substr(0, eq_pos);
-            string valor = campo.substr(eq_pos + 1);
-        
-            valor.erase(0, valor.find_first_not_of(" \t"));
-            valor.erase(valor.find_last_not_of(" \t") + 1);
-        
-            if (clave == "pid") p.pid = stoi(valor);
-            else if (clave == "pc") p.pc = stoi(valor);
-            else if (clave == "ax") p.ax = stoi(valor);
-            else if (clave == "bx") p.bx = stoi(valor);
-            else if (clave == "cx") p.cx = stoi(valor);
-            else if (clave == "quantum") p.quantum = stoi(valor);
-            else if (clave == "instrucciones") {
-                p.instrucciones.clear();
-                p.instrucciones.push_back(valor);  // también puedes dividir por espacio o coma si hay varias
-            }
-        }
+    Proceso p;
+    stringstream ss(linea);
+    string campo;
     
-        return p;
+    while (getline(ss, campo, ',')) {
+        campo.erase(0, campo.find_first_not_of(" \t"));
+        campo.erase(campo.find_last_not_of(" \t") + 1);
+    
+        size_t eq_pos = campo.find('=');
+        if (eq_pos == string::npos) continue;
+    
+        string clave = campo.substr(0, eq_pos);
+        string valor = campo.substr(eq_pos + 1);
+    
+        valor.erase(0, valor.find_first_not_of(" \t"));
+        valor.erase(valor.find_last_not_of(" \t") + 1);
+    
+        if (clave == "pid") p.pid = stoi(valor);
+        else if (clave == "pc") p.pc = stoi(valor);
+        else if (clave == "ax") p.ax = stoi(valor);
+        else if (clave == "bx") p.bx = stoi(valor);
+        else if (clave == "cx") p.cx = stoi(valor);
+        else if (clave == "quantum") p.quantum = stoi(valor);
     }
+
+    // Leer instrucciones desde archivo "<pid>.txt"
+    ifstream instFile(to_string(p.pid) + ".txt");
+    string inst;
+    while (getline(instFile, inst)) {
+        if (!inst.empty()) p.instrucciones.push_back(inst);
+    }
+
+    return p;
+}

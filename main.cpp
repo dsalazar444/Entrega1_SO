@@ -5,8 +5,6 @@
 int main() {
     Planificador p("./documento.JSON");
 
-    p.roundRobin();
-
     cout << "\nPon el nombre de tu archivo txt: ";
     string filepath;
     cin >> filepath;
@@ -21,5 +19,6 @@ int main() {
         copia.pop();
     }
 
+    p.roundRobin();
     return 0;
 }
