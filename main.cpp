@@ -4,8 +4,21 @@
 
 int main() {
     Planificador p("./documento.JSON");
-    //p.recorrerProcesos(p.procesos); //-> Era para verificar que se estuvieran
-    //agregando a la queu como dato Proceso
+
+    cout << "\nPon el nombre de tu archivo txt: ";
+    string filepath;
+    cin >> filepath;
+
+    p.agregarTodosDesdeTxt(filepath);
+
+    cout << "\n=== Todos los procesos cargados desde TXT ===\n";
+    queue<Proceso> copia = p.procesos;  // para no vaciar la cola original
+
+    while (!copia.empty()) {
+        copia.front().mostrar();
+        copia.pop();
+    }
+
     p.roundRobin();
     return 0;
 }

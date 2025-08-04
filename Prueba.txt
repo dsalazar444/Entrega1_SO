@@ -1,0 +1,2 @@
+pid=3, pc=4, ax=3, bx=4, cx=5, quantum=3, instrucciones=ADD AX, 1
+pid=4, pc=1, ax=2, bx=1, cx=4, quantum=3, instrucciones=ADD AX, 1
