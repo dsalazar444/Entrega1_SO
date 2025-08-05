@@ -42,7 +42,7 @@ struct Planificador {
             if (linea.empty()) continue; //Si la linea está vacía, saltamos a la siguiente iteración
             Proceso nuevo = parseLineaTxt(linea); 
             procesos.push(nuevo);
-            cout << "Se cargó el proceso PID " << nuevo.pid << endl;
+            cout << "Se ha cargado el proceso PID " << nuevo.pid << endl;
         }
     }
 
@@ -101,8 +101,11 @@ struct Planificador {
             return 0;
         }
         if (op == "JMP") {
+            cout << "entre a jump op" << endl;
             if (stoi(arg1) < p.instrucciones.size()) { //Si el argumento es un número válido dentro del rango de instrucciones
+                p.instrucciones[p.pc]=""; //"Borramos" instrucción antes de saltar
                 p.pc = stoi(arg1); //Si es un salto, actualizamos el PC al valor del argumento, pero no actualizamos su quantum
+                cout << "pc luego de jump: " << p.pc << endl;
             return 1; //Unica forma de indicar que la instruccion que hemos ejecutado es la de JMP
             } 
             
@@ -120,10 +123,13 @@ struct Planificador {
             if (reg1) {
                 if (op == "ADD") *reg1 += val2;
                 else if (op == "SUB") *reg1 -= val2;
-                else if (op == "MUL") *reg1 -= val2;
+                else if (op == "MUL") *reg1 *= val2;  // Corrección: MUL debe multiplicar, no restar
             }
             return 0;    
         }
+        
+        // Si llegamos aquí, la instrucción no fue reconocida
+        return 0;
     }
 
 
@@ -140,18 +146,24 @@ struct Planificador {
             int ciclos = 0; //Con este aseguraremos que se respete el quantum de cada proceso
             while (ciclos < actual.quantum && actual.pc < actual.instrucciones.size()) { //Mientras que ciclos sea menor al quantum (el proceso todavia tiene tiempo de CPU) y el PC sea menor al tamaño de las instrucciones (el proceso todavia tiene instrucciones por ejecutar)
                 string instruccion = actual.instrucciones[actual.pc]; //Obtenemos la instrucción n del proceso, dada por el PC
-                if (instruccion.empty()) continue; //Si la instrucción está vacía, saltamos a la siguiente iteración sin consumir quantum
+                if (instruccion.empty()) { 
+                    actual.pc++; // Incrementar PC para evitar bucle infinito
+                    continue; //Si la instrucción está vacía, saltamos a la siguiente iteración sin consumir quantum
+                }
                 cout << ">> Proceso " << actual.pid << " ejecutando: " 
                      << actual.instrucciones[actual.pc] << endl;
 
-                if (ejecutarInstruccion(actual, instruccion)) { //Llamamos a función para que ejecute la instrucción.
-                    actual.instrucciones[actual.pc] = ""; //Si la instrucción es un salto, despues de su ejecución la reemplazaremos por vacio, Para este punto actual.pc ya tendrá el valor d ela instruccion a la que saltamos
-                }  else actual.pc++;// actualizamos PC (siguiente instrucción) y ciclos (cada instrucción cuenta como un ciclo, restando 1 al quantum)
+                if (!ejecutarInstruccion(actual, instruccion)) {//Llamamos a función para que ejecute la instrucción
+                    // Si no es jmp, debemos actualizar el pc (si es jmp ya se
+                    // actualizó al ejecutar instrucción)
+                      actual.pc++;// actualizamos PC (siguiente instrucción) y ciclos (cada instrucción cuenta como un ciclo, restando 1 al quantum)
+                }
+                
                 //Fuera de else porque en cualquiera de los casos se consume un ciclo
                 ciclos++;
 
                  // Mostrar cambio tras ejecutar instrucción
-                cout << "   Estado tras instrucción: PC=" << actual.pc
+                cout << "   Estado tras instruccion: PC=" << actual.pc
                  << ", AX=" << actual.ax << ", BX=" << actual.bx << ", CX=" << actual.cx << endl;
 
             }

@@ -62,9 +62,11 @@ Proceso parseLineaTxt(const string& linea) {
         campo.erase(campo.find_last_not_of(" \t") + 1);
         //eliminamos desde inicio (0) hasta la posición del primer caracter que no sea espacio o tab (eliminamos los espacios en blanco) 
 
-        if (numeroBloque == 0) size_t eq_pos = campo.find(':'); //Si es el primer bloque (PID), se usa :, por lo que buscamos la posición de :
-        else size_t eq_pos = campo.find('='); // Si no es el primer bloque, se usa =, por lo que buscamos la posición de =
+        cout << "campo limpio: " << campo << endl; 
+        if (numeroBloque == 0) eq_pos = campo.find(':'); //Si es el primer bloque (PID), se usa :, por lo que buscamos la posición de :
+        else eq_pos = campo.find('='); // Si no es el primer bloque, se usa =, por lo que buscamos la posición de =
 
+        cout << "posicion igual: " << eq_pos << endl; 
         numeroBloque++; //Aumentamos el número de bloque para saber si es el primer bloque o no (para saber si usamos : o =)
        //En dato tipo size_t (usado para guardar tamaños), almacenamos la posicion del signo :
         if (eq_pos == string::npos) continue; //Si no hay signo = (find retorna npos), saltamos a la siguiente iteración
@@ -77,6 +79,9 @@ Proceso parseLineaTxt(const string& linea) {
         //Limpiamos espacios en blanco al inicio y al final de valor
         valor.erase(0, valor.find_first_not_of(" \t"));
         valor.erase(valor.find_last_not_of(" \t") + 1);
+
+        cout << "clave: " << clave << endl; 
+        cout << "valor limpio: " << valor << endl; 
     
         if (clave == "pid") p.pid = stoi(valor); // Convertimos el valor a entero para almacenarlo en los atributos del proceso
         else if (clave == "pc") p.pc = stoi(valor);
@@ -84,8 +89,15 @@ Proceso parseLineaTxt(const string& linea) {
         else if (clave == "bx") p.bx = stoi(valor);
         else if (clave == "cx") p.cx = stoi(valor);
         else if (clave == "quantum") p.quantum = stoi(valor);
+
     }
 
+    cout << "pid: " << p.pid << endl; 
+    cout << "pc: " << p.pc << endl; 
+    cout << "ax: " << p.ax << endl; 
+    cout << "bx: " << p.bx << endl; 
+    cout << "cx: " << p.cx << endl; 
+    cout << "quantum: " << p.quantum << endl; 
     // Leer instrucciones desde archivo "<pid>.txt" (se leen desde acá porque a pesar de que provengan de diferentes rutas, siguen siendo datos del mismo proceso)
     ifstream instFile(to_string(p.pid) + ".txt"); //Creamos un ifstream llamado instFile, que abrirá el archivo con el nombre del PID del proceso y extensión .txt (1.txt)
     if (!instFile.is_open()) {
