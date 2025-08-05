@@ -3,8 +3,8 @@
 //aquí no es necesario.
 
 int main() {
-    Planificador p("./documento.JSON");
-
+    //Planificador p("./documento.JSON");
+    Planificador p;
     cout << "\nPon el nombre de tu archivo txt: ";
     string filepath;
     cin >> filepath;
