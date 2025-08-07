@@ -71,6 +71,7 @@ struct Planificador {
 
     void roundRobin() {
 
+        ofstream log("simulacion.log");
         unordered_map<int, int> contadorPorPC;
         const int MAX_REP_POR_PC = 10;
         while (!procesos.empty()) {
@@ -78,16 +79,21 @@ struct Planificador {
             procesos.pop();
 
             cout << "\n[Cambio de contexto]\n";
+            log << "\n[Cambio de contexto]\n";
             cout << "Cargando estado de Proceso " << actual.pid << ": PC=" << actual.pc 
+                 << ", AX=" << actual.ax << ", BX=" << actual.bx << ", CX=" << actual.cx << endl;
+            log << "Cargando estado de Proceso " << actual.pid << ": PC=" << actual.pc 
                  << ", AX=" << actual.ax << ", BX=" << actual.bx << ", CX=" << actual.cx << endl;
 
             int ciclos = 0;
             while (ciclos < actual.quantum && actual.pc < actual.instrucciones.size()) {
                 string instruccion = actual.instrucciones[actual.pc];
                 cout << ">> Proceso " << actual.pid << " ejecutando: " << instruccion << endl;
+                log << ">> Proceso " << actual.pid << " ejecutando: " << instruccion << endl;
                 contadorPorPC[actual.pc]++;
                 if (contadorPorPC[actual.pc] > MAX_REP_POR_PC) {
                     cout << "⚠️ Se detectó ciclo en PC=" << actual.pc << ". Forzando avance.\n";
+                    log << "⚠️ Se detectó ciclo en PC=" << actual.pc << ". Forzando avance.\n";
                     actual.pc++; // saltar la instrucción problemática
                     break;       // salir del quantum o puedes seguir si prefieres
                 }
@@ -100,15 +106,20 @@ struct Planificador {
 
                 cout << "   Estado tras instrucción: PC=" << actual.pc
                      << ", AX=" << actual.ax << ", BX=" << actual.bx << ", CX=" << actual.cx << endl;
+                log << "   Estado tras instrucción: PC=" << actual.pc
+                     << ", AX=" << actual.ax << ", BX=" << actual.bx << ", CX=" << actual.cx << endl;
             }
 
             cout << "Guardando estado de Proceso " << actual.pid << ": PC=" << actual.pc 
+                 << ", AX=" << actual.ax << ", BX=" << actual.bx << ", CX=" << actual.cx << endl;
+            log << "Guardando estado de Proceso " << actual.pid << ": PC=" << actual.pc 
                  << ", AX=" << actual.ax << ", BX=" << actual.bx << ", CX=" << actual.cx << endl;
 
             if (actual.pc < actual.instrucciones.size()) {
                 procesos.push(actual);
             } else {
                 cout << ">> Proceso " << actual.pid << " ha terminado.\n";
+                log << ">> Proceso " << actual.pid << " ha terminado.\n";
             }
         }
     }

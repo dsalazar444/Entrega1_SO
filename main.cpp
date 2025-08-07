@@ -3,11 +3,11 @@
 int main() {
     Planificador p;
 
-    cout << "\nPon el nombre de tu archivo txt: ";
+    /*cout << "\nPon el nombre de tu archivo txt: "; // por si depronto quiere poner el nombre del archivo desde consola
     string filepath;
-    cin >> filepath;
+    cin >> filepath;*/
 
-    p.agregarTodosDesdeTxt(filepath);
+    p.agregarTodosDesdeTxt("procesos.txt");
 
     cout << "\n=== Todos los procesos cargados desde TXT ===\n";
     queue<Proceso> copia = p.procesos;

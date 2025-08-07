@@ -38,22 +38,34 @@ Proceso parseLineaTxt(const string& linea) {
         campo.erase(0, campo.find_first_not_of(" \t"));
         campo.erase(campo.find_last_not_of(" \t") + 1);
 
-        size_t eq_pos = campo.find('=');
-        if (eq_pos == string::npos) continue;
+        // Aquí detectamos el tipo de separador SOLO para pid
+        string clave, valor;
+        if (campo.find("pid:") != string::npos) {
+            size_t sep_pos = campo.find(':');
+            clave = campo.substr(0, sep_pos);
+            valor = campo.substr(sep_pos + 1);
+        } else {
+            size_t sep_pos = campo.find('=');
+            if (sep_pos == string::npos) continue;
 
-        string clave = campo.substr(0, eq_pos);
-        string valor = campo.substr(eq_pos + 1);
+            clave = campo.substr(0, sep_pos);
+            valor = campo.substr(sep_pos + 1);
+        }
 
+        // Limpiar espacios
+        clave.erase(0, clave.find_first_not_of(" \t"));
+        clave.erase(clave.find_last_not_of(" \t") + 1);
         valor.erase(0, valor.find_first_not_of(" \t"));
         valor.erase(valor.find_last_not_of(" \t") + 1);
 
+        // Asignación
         if (clave == "pid") p.pid = stoi(valor);
         else if (clave == "ax") p.ax = stoi(valor);
         else if (clave == "bx") p.bx = stoi(valor);
         else if (clave == "cx") p.cx = stoi(valor);
         else if (clave == "quantum") p.quantum = stoi(valor);
-        // NOTA: ya no se lee ni se asigna "pc"
     }
+
 
     // Instrucciones desde archivo "<pid>.txt"
     ifstream instFile(to_string(p.pid) + ".txt");
