@@ -9,11 +9,17 @@
 using namespace std;
 
 struct Planificador {
+   // Atributos
     queue<Proceso> procesos;
 
-    // Constructor sin JSON
+    // Constructor de la estructura
     Planificador() = default;
 
+    /* Funcion que:
+        - Abre el archivo txt
+        - Recorre el contenido de este, guardando cada linea como un Proceso
+        y agregandolo a la queue de la clase Planificador, llamada procesos.
+    */
     void agregarTodosDesdeTxt(const string& filepath) {
         ifstream archivo(filepath);
         if (!archivo.is_open()) {
@@ -29,6 +35,10 @@ struct Planificador {
         }
     }
 
+    /* Funcion que:
+        - Obtiene una instrucción y la separa en opcode, op1 y op2, limpiandola.
+        - Realiza la operación indicada, actualizando los registros necesarios
+    */
    void ejecutarInstruccion(Proceso& p, const string& inst) {
         stringstream ss(inst);
         string opcode, op1, op2;
@@ -62,6 +72,7 @@ struct Planificador {
         }
     }
 
+    /*Función que obtiene el valor de un registro, de un proceso p*/
     int* getRegistro(Proceso& p, const string& nombre) {
         if (nombre == "AX") return &p.ax;
         if (nombre == "BX") return &p.bx;
@@ -69,6 +80,11 @@ struct Planificador {
         return nullptr;
     }
 
+    /*Función que:
+      - Gestiona la cola de procesos, simulando el round robin
+      - Imprime los cambios de contexto, junto con el PCB de cada proceso
+      - Llama a la función que ejecuta las instrucciones
+      */
     void roundRobin() {
 
         ofstream log("simulacion.log");
