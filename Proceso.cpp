@@ -6,6 +6,7 @@
 
 using namespace std;
 
+ /*Estructura que simulará los procesos gestionados por el programa.*/
 struct Proceso {
     int pid;
     int pc;
@@ -14,8 +15,10 @@ struct Proceso {
     string estado = "Listo";
     vector<string> instrucciones;
 
+    /*Constructor del struct*/
     Proceso() = default;
 
+    /*Función que imprime los datos (atributos) de un proceso*/
     void mostrar() {
         cout << "\n===== Proceso PID " << pid << " =====\n";
         cout << "PC: " << pc << "\nAX: " << ax << "\nBX: " << bx << "\nCX: " << cx;
@@ -27,6 +30,12 @@ struct Proceso {
     }
 };
 
+/*Funcion que:
+  - Obtiene cada linea del txt (el que contiene los procesos, y luego el txt con las instrucciones)
+  - Divide y limpia la cadena
+  - Asigna esos valores a los atributos de un Proceso
+  - Retorna el proceso. 
+*/
 Proceso parseLineaTxt(const string& linea) {
     Proceso p;
     p.pc = 0; // forzar PC a 0 siempre
