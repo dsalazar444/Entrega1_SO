@@ -40,7 +40,7 @@ Proceso parseLineaTxt(const string& linea) {
 
         // Aquí detectamos el tipo de separador SOLO para pid
         string clave, valor;
-        if (campo.find("pid:") != string::npos) {
+        if (campo.find("PID:") != string::npos) {
             size_t sep_pos = campo.find(':');
             clave = campo.substr(0, sep_pos);
             valor = campo.substr(sep_pos + 1);
@@ -59,11 +59,11 @@ Proceso parseLineaTxt(const string& linea) {
         valor.erase(valor.find_last_not_of(" \t") + 1);
 
         // Asignación
-        if (clave == "pid") p.pid = stoi(valor);
-        else if (clave == "ax") p.ax = stoi(valor);
-        else if (clave == "bx") p.bx = stoi(valor);
-        else if (clave == "cx") p.cx = stoi(valor);
-        else if (clave == "quantum") p.quantum = stoi(valor);
+        if (clave == "PID") p.pid = stoi(valor);
+        else if (clave == "AX") p.ax = stoi(valor);
+        else if (clave == "BX") p.bx = stoi(valor);
+        else if (clave == "CX") p.cx = stoi(valor);
+        else if (clave == "Quantum") p.quantum = stoi(valor);
     }
 
 

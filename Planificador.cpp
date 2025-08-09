@@ -95,7 +95,7 @@ struct Planificador {
                     cout << "⚠️ Se detectó ciclo en PC=" << actual.pc << ". Forzando avance.\n";
                     log << "⚠️ Se detectó ciclo en PC=" << actual.pc << ". Forzando avance.\n";
                     actual.pc++; // saltar la instrucción problemática
-                    break;       // salir del quantum o puedes seguir si prefieres
+                    break;       // salir del quantum 
                 }
 
                 ejecutarInstruccion(actual, instruccion);
